@@ -89,15 +89,20 @@ def home():
 
 @app.route('/getGeneralDetect', methods=['POST', 'OPTIONS'])
 def general_detect():
-    if request.method == 'OPTIONS':
-        print('options')
-        return build_preflight_response()
-    elif request.method == 'POST':
-        imgurl = request.get_json()['imgUrl']
-        image = url_to_image(imgurl)
-        res = gendetect.generalDetect(image)
-        print("res: ", res)
-        return build_actual_response(jsonify(res))
+    try:
+        if request.method == 'OPTIONS':
+            print('options')
+            return build_preflight_response()
+        elif request.method == 'POST':
+            imgurl = request.get_json()['imgUrl']
+            image = url_to_image(imgurl)
+            res = gendetect.generalDetect(image)
+            print("res: ", res)
+            return build_actual_response(jsonify(res))
+    except Exception as e:
+        print(e)
+        return jsonify({"error": "not found"})
+
 
 
 @app.route('/', methods=['GET'])
