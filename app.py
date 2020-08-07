@@ -3,6 +3,7 @@ import werkzeug
 import urllib.request
 import numpy as np
 import gendetect
+from flask_cors import CORS
 
 import flask
 from flask import request, jsonify, make_response
@@ -65,6 +66,7 @@ def faces(image):
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
+CORS(app)
 
 
 @app.route('/getFaceRect', methods=['POST', 'OPTIONS'])
@@ -102,7 +104,6 @@ def general_detect():
     except Exception as e:
         print(e)
         return jsonify({"error": "not found"})
-
 
 
 @app.route('/', methods=['GET'])
