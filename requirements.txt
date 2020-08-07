@@ -3,3 +3,4 @@ opencv-utils
 opencv-python
 flask
 Gunicorn
+flask-cors
