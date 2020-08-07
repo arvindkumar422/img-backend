@@ -1,10 +1,11 @@
 import cv2
-import sys
+import werkzeug
 import urllib.request
 import numpy as np
 import gendetect
 
-from flask import Flask, request, jsonify, make_response
+import flask
+from flask import request, jsonify, make_response
 
 
 def url_to_image(url):
@@ -62,11 +63,11 @@ def faces(image):
     return res
 
 
-application = Flask(__name__)
-application.config["DEBUG"] = True
+app = flask.Flask(__name__)
+app.config["DEBUG"] = True
 
 
-@application.route('/getFaceRect', methods=['POST', 'OPTIONS'])
+@app.route('/getFaceRect', methods=['POST', 'OPTIONS'])
 def home():
     try:
         if request.method == 'OPTIONS':
@@ -82,11 +83,11 @@ def home():
             # print("response: ",build_actual_response(jsonify(rect)));
             return build_actual_response(jsonify(rect))
     except Exception as e:
-        return jsonify({"error": "error"})
+        print(e)
+        return jsonify({"error": "not found"})
 
 
-
-@application.route('/getGeneralDetect', methods=['POST', 'OPTIONS'])
+@app.route('/getGeneralDetect', methods=['POST', 'OPTIONS'])
 def general_detect():
     if request.method == 'OPTIONS':
         print('options')
@@ -99,7 +100,7 @@ def general_detect():
         return build_actual_response(jsonify(res))
 
 
-@application.route('/')
+@app.route('/', methods=['GET'])
 def index():
     return "App is up and running (-:"
 
@@ -115,8 +116,3 @@ def build_preflight_response():
 def build_actual_response(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
-
-
-if __name__ == '__main__':
-    application.run()
-
